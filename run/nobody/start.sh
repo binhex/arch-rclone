@@ -18,9 +18,9 @@ while true; do
 
 		echo "[info] Running rclone for media share '${rclone_media_shares_item}', check rclone log file '${rclone_log}' for output..."
 		if [[ "${DEBUG}" == 'yes' ]]; then
-			echo "[debug] /usr/bin/rclone --config=${rclone_config} copy /media/${rclone_media_shares_item} ${RCLONE_REMOTE_NAME}:/${rclone_media_shares_item} --log-file=${rclone_log} --log-level INFO"
+			echo "[debug] /usr/bin/rclone --config=${RCLONE_CONFIG_PATH} copy /media/${rclone_media_shares_item} ${RCLONE_REMOTE_NAME}:/${rclone_media_shares_item} --log-file=${rclone_log} --log-level INFO"
 		fi
-		/usr/bin/rclone --config="${rclone_config}" copy "/media/${rclone_media_shares_item}" "${RCLONE_REMOTE_NAME}:/${rclone_media_shares_item}" --log-file="${rclone_log}" --log-level INFO
+		/usr/bin/rclone --config="${RCLONE_CONFIG_PATH}" copy "/media/${rclone_media_shares_item}" "${RCLONE_REMOTE_NAME}:/${rclone_media_shares_item}" --log-file="${rclone_log}" --log-level INFO
 		echo "[info] rclone for media share '${rclone_media_shares_item}' finished"
 
 	done
