@@ -120,7 +120,7 @@ else
 	export RCLONE_CONFIG_PATH="/config/rclone/config/rclone.conf"
 fi
 
-if [ ! -f "${RCLONE_CONFIG_PATH} ]; then
+if [ ! -f "${RCLONE_CONFIG_PATH}" ]; then
 	echo "[crit] RCLONE_CONFIG_PATH '${RCLONE_CONFIG_PATH}' does not exist, exiting script..." | ts '%Y-%m-%d %H:%M:%.S'
 	exit 1
 fi
