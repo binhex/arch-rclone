@@ -6,7 +6,7 @@ rclone_log="/config/rclone/logs/rclone.log"
 mkdir -p /config/rclone/config /config/rclone/logs
 
 # call log rotate script (background)
-source /usr/local/bin/utils.sh && nohup log_rotate "${rclone_log}" >> "/config/supervisord.log" &
+nohup /bin/bash -c "source /usr/local/bin/utils.sh && log_rotate --log-path '${rclone_log}' >> '/config/supervisord.log'" &
 
 # split comma separated media shares
 IFS=',' read -ra rclone_media_shares_list <<< "${RCLONE_MEDIA_SHARES}"
