@@ -116,7 +116,6 @@ if [[ ! -z "${RCLONE_CONFIG_PATH}" ]]; then
 	echo "[info] RCLONE_CONFIG_PATH defined as '${RCLONE_CONFIG_PATH}'" | ts '%Y-%m-%d %H:%M:%.S'
 else
 	echo "[info] RCLONE_CONFIG_PATH not defined,(via -e RCLONE_CONFIG_PATH), defaulting to '/config/rclone/config/rclone.conf'" | ts '%Y-%m-%d %H:%M:%.S'
-	mkdir -p '/config/rclone/config'
 	export RCLONE_CONFIG_PATH="/config/rclone/config/rclone.conf"
 fi
 

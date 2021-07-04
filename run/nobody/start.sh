@@ -3,7 +3,7 @@
 rclone_log="/config/rclone/logs/rclone.log"
 
 # create folder structure for config, temp and logs
-mkdir -p /config/rclone/logs
+mkdir -p /config/rclone/config /config/rclone/logs
 
 # call log rotate script (background)
 source /usr/local/bin/utils.sh && nohup log_rotate "${rclone_log}" >> "/config/supervisord.log" &
