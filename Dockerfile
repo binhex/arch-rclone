@@ -32,6 +32,9 @@ ENV HOME /home/nobody
 # port used to authorise rclone (onedrive)
 EXPOSE 53682
 
+# port used for optional web ui
+EXPOSE 8950
+
 # set permissions
 #################
 

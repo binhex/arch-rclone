@@ -11,6 +11,14 @@ nohup /bin/bash -c "source /usr/local/bin/utils.sh && log_rotate --log-path '${r
 # split comma separated media shares
 IFS=',' read -ra rclone_media_shares_list <<< "${RCLONE_MEDIA_SHARES}"
 
+# if web ui enabled then run rclone web ui
+if [[ "${ENABLE_WEBUI}" == 'yes' ]]; then
+	if [[ "${DEBUG}" == 'yes' ]]; then
+		echo "[debug] /usr/bin/rclone rcd --config '${RCLONE_CONFIG_PATH}' --rc-web-gui --rc-addr 0.0.0.0:8950 --rc-web-gui-no-open-browser --rc-user '${WEBUI_USER}' --rc-pass '${WEBUI_PASS}'"
+	fi
+	/usr/bin/rclone rcd --config "${RCLONE_CONFIG_PATH}" --rc-web-gui --rc-addr 0.0.0.0:8950 --rc-web-gui-no-open-browser --rc-user "${WEBUI_USER}" --rc-pass "${WEBUI_PASS}"
+fi
+
 while true; do
 
 	# loop over list of media share names

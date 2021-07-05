@@ -151,6 +151,43 @@ else
 	export RCLONE_SLEEP_PERIOD="24h"
 fi
 
+export ENABLE_WEBUI=$(echo "${ENABLE_WEBUI}" | sed -e 's~^[ \t]*~~;s~[ \t]*$~~')
+if [[ ! -z "${ENABLE_WEBUI}" ]]; then
+	echo "[info] ENABLE_WEBUI defined as '${ENABLE_WEBUI}'" | ts '%Y-%m-%d %H:%M:%.S'
+else
+	echo "[warn] ENABLE_WEBUI not defined (via -e ENABLE_WEBUI), defaulting to 'yes'" | ts '%Y-%m-%d %H:%M:%.S'
+	export ENABLE_WEBUI="yes"
+fi
+
+if [[ $ENABLE_WEBUI == "yes" ]]; then
+	export WEBUI_USER=$(echo "${WEBUI_USER}" | sed -e 's~^[ \t]*~~;s~[ \t]*$~~')
+	if [[ ! -z "${WEBUI_USER}" ]]; then
+		echo "[info] WEBUI_USER defined as '${WEBUI_USER}'" | ts '%Y-%m-%d %H:%M:%.S'
+	else
+		echo "[warn] WEBUI_USER not defined (via -e WEBUI_USER), defaulting to 'admin'" | ts '%Y-%m-%d %H:%M:%.S'
+		export WEBUI_USER="admin"
+	fi
+
+	export WEBUI_PASS=$(echo "${WEBUI_PASS}" | sed -e 's~^[ \t]*~~;s~[ \t]*$~~')
+	if [[ ! -z "${WEBUI_PASS}" ]]; then
+		if [[ "${WEBUI_PASS}" == "rclone" ]]; then
+			echo "[warn] WEBUI_PASS defined as '${WEBUI_PASS}' is weak, please consider using a stronger password" | ts '%Y-%m-%d %H:%M:%.S'
+		else
+			echo "[info] WEBUI_PASS defined as '${WEBUI_PASS}'" | ts '%Y-%m-%d %H:%M:%.S'
+		fi
+	else
+		WEBUI_PASS_file="/config/rclone/security/WEBUI_PASS"
+		if [ ! -f "${WEBUI_PASS_file}" ]; then
+			# generate random password for web ui using SHA to hash the date,
+			# run through base64, and then output the top 16 characters to a file.
+			mkdir -p "/config/rclone/security" ; chown -R nobody:users "/config/rclone"
+			date +%s | sha256sum | base64 | head -c 16 > "${WEBUI_PASS_file}"
+		fi
+		echo "[warn] WEBUI_PASS not defined (via -e WEBUI_PASS), using randomised password (password stored in '${WEBUI_PASS_file}')" | ts '%Y-%m-%d %H:%M:%.S'
+		export WEBUI_PASS="$(cat ${WEBUI_PASS_file})"
+	fi
+fi
+
 EOF
 
 # replace env vars placeholder string with contents of file (here doc)
