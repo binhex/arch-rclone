@@ -11,12 +11,11 @@ nohup /bin/bash -c "source /usr/local/bin/utils.sh && log_rotate --log-path '${r
 # split comma separated media shares
 IFS=',' read -ra rclone_media_shares_list <<< "${RCLONE_MEDIA_SHARES}"
 
-# if web ui enabled then run rclone web ui
+# if web ui enabled then supply config options to rclone
 if [[ "${ENABLE_WEBUI}" == 'yes' ]]; then
-	if [[ "${DEBUG}" == 'yes' ]]; then
-		echo "[debug] /usr/bin/rclone rcd --config '${RCLONE_CONFIG_PATH}' --rc-web-gui --rc-addr 0.0.0.0:8950 --rc-web-gui-no-open-browser --rc-user '${WEBUI_USER}' --rc-pass '${WEBUI_PASS}'"
-	fi
-	/usr/bin/rclone rcd --config "${RCLONE_CONFIG_PATH}" --rc-web-gui --rc-addr 0.0.0.0:8950 --rc-web-gui-no-open-browser --rc-user "${WEBUI_USER}" --rc-pass "${WEBUI_PASS}"
+	rclone_webui="--rc --rc-web-gui --rc-addr 0.0.0.0:8950 --rc-web-gui-no-open-browser --rc-user ${WEBUI_USER} --rc-pass ${WEBUI_PASS}"
+else
+	rclone_webui=""
 fi
 
 while true; do
@@ -26,9 +25,9 @@ while true; do
 
 		echo "[info] Running rclone for media share '${rclone_media_shares_item}', check rclone log file '${rclone_log}' for output..."
 		if [[ "${DEBUG}" == 'yes' ]]; then
-			echo "[debug] /usr/bin/rclone --config=${RCLONE_CONFIG_PATH} copy /media/${rclone_media_shares_item} ${RCLONE_REMOTE_NAME}:/${rclone_media_shares_item} --log-file=${rclone_log} --log-level INFO"
+			echo "[debug] /usr/bin/rclone --config=${RCLONE_CONFIG_PATH} copy /media/${rclone_media_shares_item} ${RCLONE_REMOTE_NAME}:/${rclone_media_shares_item} ${rclone_webui} --log-file=${rclone_log} --log-level INFO"
 		fi
-		/usr/bin/rclone --config="${RCLONE_CONFIG_PATH}" copy "/media/${rclone_media_shares_item}" "${RCLONE_REMOTE_NAME}:/${rclone_media_shares_item}" --log-file="${rclone_log}" --log-level INFO
+		/usr/bin/rclone --config="${RCLONE_CONFIG_PATH}" copy "/media/${rclone_media_shares_item}" "${RCLONE_REMOTE_NAME}:/${rclone_media_shares_item}" ${rclone_webui} --log-file="${rclone_log}" --log-level INFO
 		echo "[info] rclone for media share '${rclone_media_shares_item}' finished"
 
 	done
