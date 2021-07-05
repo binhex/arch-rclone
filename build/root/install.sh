@@ -34,6 +34,9 @@ fi
 # pacman packages
 ####
 
+# call pacman db and package updater script
+source upd.sh
+
 # define pacman packages
 pacman_packages="rclone"
 
