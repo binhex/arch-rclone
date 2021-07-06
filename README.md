@@ -18,6 +18,7 @@ Latest stable Radarr release from Arch Repository.
 ```
 docker run -d \
     -p 53682:53682 \
+    -p 5572:5572 \
     --name=<container name> \
     -v <path for media files>:/media \
     -v <path for config files>:/config \
@@ -26,6 +27,9 @@ docker run -d \
     -e RCLONE_MEDIA_SHARES=<media share names to sync> \
     -e RCLONE_REMOTE_NAME=<rclone remote name in config file> \
     -e RCLONE_SLEEP_PERIOD=<period to sleep between rclone sync> \
+    -e ENABLE_WEBUI=yes|no \
+    -e WEBUI_USER=<rclone web ui username> \
+    -e WEBUI_PASS=<rclone web ui password> \
     -e UMASK=<umask for created files> \
     -e PUID=<uid for user> \
     -e PGID=<gid for user> \
@@ -36,12 +40,15 @@ Please replace all user variables in the above command defined by <> with the co
 
 **Access application**
 
-N/A CLI tool.
+Requires `-e ENABLE_WEBUI=yes`
+
+`http://<host ip>:5572`
 
 **Example**
 ```
 docker run -d \
     -p 53682:53682 \
+    -p 5572:5572 \
     --name=binhex-rclone \
     -v /media/movies:/media \
     -v /apps/docker/radarr:/config \
@@ -50,6 +57,9 @@ docker run -d \
     -e RCLONE_MEDIA_SHARES=Music,Pictures,Videos \
     -e RCLONE_REMOTE_NAME=onedrive-business-encrypt \
     -e RCLONE_SLEEP_PERIOD=24h \
+    -e ENABLE_WEBUI=yes \
+    -e WEBUI_USER=admin \
+    -e WEBUI_PASS=rclone \
     -e UMASK=000 \
     -e PUID=0 \
     -e PGID=0 \

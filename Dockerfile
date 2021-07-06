@@ -33,7 +33,7 @@ ENV HOME /home/nobody
 EXPOSE 53682
 
 # port used for optional web ui
-EXPOSE 8950
+EXPOSE 5572
 
 # set permissions
 #################
