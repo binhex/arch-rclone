@@ -1,6 +1,7 @@
 #!/bin/bash
 
 rclone_log="/config/rclone/logs/rclone.log"
+rclone_webui_log="/config/rclone/logs/rclone_webui.log"
 
 # create folder structure for config, temp and logs
 mkdir -p /config/rclone/config /config/rclone/logs
@@ -11,11 +12,14 @@ nohup /bin/bash -c "source /usr/local/bin/utils.sh && log_rotate --log-path '${r
 # split comma separated media shares
 IFS=',' read -ra rclone_media_shares_list <<< "${RCLONE_MEDIA_SHARES}"
 
-# if web ui enabled then supply config options to rclone
+# if web ui enabled then run rclone web ui
 if [[ "${ENABLE_WEBUI}" == 'yes' ]]; then
-	rclone_webui="--rc --rc-web-gui --rc-addr 0.0.0.0:8950 --rc-web-gui-no-open-browser --rc-user ${WEBUI_USER} --rc-pass ${WEBUI_PASS}"
-else
-	rclone_webui=""
+	nohup /usr/bin/rclone rcd --config="${RCLONE_CONFIG_PATH}" --rc-web-gui --rc-addr 0.0.0.0:5572 --rc-web-gui-no-open-browser --rc-user ${WEBUI_USER} --rc-pass ${WEBUI_PASS} --log-file="${rclone_webui_log}" --log-level INFO &
+	echo "[info] Waiting for Rclone Web UI process to start listening on port 5572..."
+	while [[ $(netstat -lnt | awk "\$6 == \"LISTEN\" && \$4 ~ \".5572\"") == "" ]]; do
+		sleep 0.1
+	done
+	echo "[info] Rclone Web UI process listening on port 5572"
 fi
 
 while true; do
@@ -24,10 +28,11 @@ while true; do
 	for rclone_media_shares_item in "${rclone_media_shares_list[@]}"; do
 
 		echo "[info] Running rclone for media share '${rclone_media_shares_item}', check rclone log file '${rclone_log}' for output..."
-		if [[ "${DEBUG}" == 'yes' ]]; then
-			echo "[debug] /usr/bin/rclone --config=${RCLONE_CONFIG_PATH} copy /media/${rclone_media_shares_item} ${RCLONE_REMOTE_NAME}:/${rclone_media_shares_item} ${rclone_webui} --log-file=${rclone_log} --log-level INFO"
+		if [[ "${ENABLE_WEBUI}" == 'yes' ]]; then
+			/usr/bin/rclone rc sync/copy srcFs="/media/${rclone_media_shares_item}" dstFs="${RCLONE_REMOTE_NAME}:/${rclone_media_shares_item}" --config="${RCLONE_CONFIG_PATH}" --rc-user=${WEBUI_USER} --rc-pass=${WEBUI_PASS} --log-file="${rclone_log}" --log-level INFO
+		else
+			/usr/bin/rclone copy "/media/${rclone_media_shares_item}" "${RCLONE_REMOTE_NAME}:/${rclone_media_shares_item}" --config="${RCLONE_CONFIG_PATH}" --log-file="${rclone_log}" --log-level INFO
 		fi
-		/usr/bin/rclone --config="${RCLONE_CONFIG_PATH}" copy "/media/${rclone_media_shares_item}" "${RCLONE_REMOTE_NAME}:/${rclone_media_shares_item}" ${rclone_webui} --log-file="${rclone_log}" --log-level INFO
 		echo "[info] rclone for media share '${rclone_media_shares_item}' finished"
 
 	done
