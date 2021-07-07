@@ -14,7 +14,7 @@ IFS=',' read -ra rclone_media_shares_list <<< "${RCLONE_MEDIA_SHARES}"
 
 # if web ui enabled then run rclone web ui in rcd mode (listening to remote control commands only)
 if [[ "${ENABLE_WEBUI}" == 'yes' ]]; then
-	nohup /usr/bin/rclone rcd --config="${RCLONE_CONFIG_PATH}" --rc-web-gui --rc-addr 0.0.0.0:5572 --rc-web-gui-no-open-browser --rc-user=${WEBUI_USER} --rc-pass=${WEBUI_PASS} --log-file="${rclone_webui_log}" --log-level INFO &
+	nohup /usr/bin/rclone rcd --config="${RCLONE_CONFIG_PATH}" --rc-web-gui --rc-addr 0.0.0.0:5572 --rc-web-gui-no-open-browser --rc-user=${WEBUI_USER} --rc-pass=${WEBUI_PASS} --transfers="${RCLONE_MAX_TRANSFERS}" --log-file="${rclone_webui_log}" --log-level INFO &
 
 	echo "[info] Waiting for Rclone Web UI process to start listening on port 5572..."
 	while [[ $(netstat -lnt | awk "\$6 == \"LISTEN\" && \$4 ~ \".5572\"") == "" ]]; do
@@ -38,9 +38,9 @@ while true; do
 			# parameter as perm fix, but this is currently json only and requires all other
 			# parameters to be re-defined as json also as you cannot mix parameters and json.
 			# for ref json looks like this:- --json '{"_async": true}'
-			/usr/bin/rclone rc "sync/${RCLONE_OPERATION}" srcFs="/media/${rclone_media_shares_item}" dstFs="${RCLONE_REMOTE_NAME}:/${rclone_media_shares_item}" --config="${RCLONE_CONFIG_PATH}" --transfers "${RCLONE_MAX_TRANSFERS}" --timeout=0 --rc-user=${WEBUI_USER} --rc-pass=${WEBUI_PASS} --log-file="${rclone_log}" --log-level INFO
+			/usr/bin/rclone rc "sync/${RCLONE_OPERATION}" srcFs="/media/${rclone_media_shares_item}" dstFs="${RCLONE_REMOTE_NAME}:/${rclone_media_shares_item}" --config="${RCLONE_CONFIG_PATH}" --transfers="${RCLONE_MAX_TRANSFERS}" --timeout=0 --rc-user=${WEBUI_USER} --rc-pass=${WEBUI_PASS} --log-file="${rclone_log}" --log-level INFO
 		else
-			/usr/bin/rclone "${RCLONE_OPERATION}" "/media/${rclone_media_shares_item}" "${RCLONE_REMOTE_NAME}:/${rclone_media_shares_item}" --config="${RCLONE_CONFIG_PATH}" --transfers "${RCLONE_MAX_TRANSFERS}" --log-file="${rclone_log}" --log-level INFO
+			/usr/bin/rclone "${RCLONE_OPERATION}" "/media/${rclone_media_shares_item}" "${RCLONE_REMOTE_NAME}:/${rclone_media_shares_item}" --config="${RCLONE_CONFIG_PATH}" --transfers="${RCLONE_MAX_TRANSFERS}" --log-file="${rclone_log}" --log-level INFO
 		fi
 		echo "[info] rclone for media share '${rclone_media_shares_item}' finished"
 
