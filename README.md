@@ -24,9 +24,9 @@ docker run -d \
     -v <path for config files>:/config \
     -v /etc/localtime:/etc/localtime:ro \
     -e RCLONE_CONFIG_PATH=<path to rclone config file> \
-    -e RCLONE_MEDIA_SHARES=<media share names to sync> \
+    -e RCLONE_MEDIA_SHARES=<media share names to copy|sync> \
     -e RCLONE_REMOTE_NAME=<rclone remote name in config file> \
-    -e RCLONE_SLEEP_PERIOD=<period to sleep between rclone sync> \
+    -e RCLONE_SLEEP_PERIOD=<period to sleep between rclone copy|sync> \
     -e ENABLE_WEBUI=yes|no \
     -e WEBUI_USER=<rclone web ui username> \
     -e WEBUI_PASS=<rclone web ui password> \
