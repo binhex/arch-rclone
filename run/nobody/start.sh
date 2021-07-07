@@ -38,9 +38,9 @@ while true; do
 			# parameter as perm fix, but this is currently json only and requires all other
 			# parameters to be re-defined as json also as you cannot mix parameters and json.
 			# for ref json looks like this:- --json '{"_async": true}'
-			/usr/bin/rclone rc sync/copy srcFs="/media/${rclone_media_shares_item}" dstFs="${RCLONE_REMOTE_NAME}:/${rclone_media_shares_item}" --config="${RCLONE_CONFIG_PATH}" --timeout=0 --rc-user=${WEBUI_USER} --rc-pass=${WEBUI_PASS} --log-file="${rclone_log}" --log-level INFO
+			/usr/bin/rclone rc "sync/${RCLONE_OPERATION}" srcFs="/media/${rclone_media_shares_item}" dstFs="${RCLONE_REMOTE_NAME}:/${rclone_media_shares_item}" --config="${RCLONE_CONFIG_PATH}" --transfers "${RCLONE_MAX_TRANSFERS}" --timeout=0 --rc-user=${WEBUI_USER} --rc-pass=${WEBUI_PASS} --log-file="${rclone_log}" --log-level INFO
 		else
-			/usr/bin/rclone copy "/media/${rclone_media_shares_item}" "${RCLONE_REMOTE_NAME}:/${rclone_media_shares_item}" --config="${RCLONE_CONFIG_PATH}" --log-file="${rclone_log}" --log-level INFO
+			/usr/bin/rclone "${RCLONE_OPERATION}" "/media/${rclone_media_shares_item}" "${RCLONE_REMOTE_NAME}:/${rclone_media_shares_item}" --config="${RCLONE_CONFIG_PATH}" --transfers "${RCLONE_MAX_TRANSFERS}" --log-file="${rclone_log}" --log-level INFO
 		fi
 		echo "[info] rclone for media share '${rclone_media_shares_item}' finished"
 

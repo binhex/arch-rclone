@@ -151,6 +151,22 @@ else
 	export RCLONE_SLEEP_PERIOD="24h"
 fi
 
+export RCLONE_OPERATION=$(echo "${RCLONE_OPERATION,,}" | sed -e 's~^[ \t]*~~;s~[ \t]*$~~')
+if [[ ! -z "${RCLONE_OPERATION}" ]]; then
+	echo "[info] RCLONE_OPERATION defined as '${RCLONE_OPERATION}'" | ts '%Y-%m-%d %H:%M:%.S'
+else
+	echo "[info] RCLONE_OPERATION not defined,(via -e RCLONE_OPERATION), defaulting to 'copy'" | ts '%Y-%m-%d %H:%M:%.S'
+	export RCLONE_OPERATION="copy"
+fi
+
+export RCLONE_MAX_TRANSFERS=$(echo "${RCLONE_MAX_TRANSFERS}" | sed -e 's~^[ \t]*~~;s~[ \t]*$~~')
+if [[ ! -z "${RCLONE_MAX_TRANSFERS}" ]]; then
+	echo "[info] RCLONE_MAX_TRANSFERS defined as '${RCLONE_MAX_TRANSFERS}'" | ts '%Y-%m-%d %H:%M:%.S'
+else
+	echo "[info] RCLONE_MAX_TRANSFERS not defined,(via -e RCLONE_MAX_TRANSFERS), defaulting to '4'" | ts '%Y-%m-%d %H:%M:%.S'
+	export RCLONE_MAX_TRANSFERS="4"
+fi
+
 export ENABLE_WEBUI=$(echo "${ENABLE_WEBUI}" | sed -e 's~^[ \t]*~~;s~[ \t]*$~~')
 if [[ ! -z "${ENABLE_WEBUI}" ]]; then
 	echo "[info] ENABLE_WEBUI defined as '${ENABLE_WEBUI}'" | ts '%Y-%m-%d %H:%M:%.S'
