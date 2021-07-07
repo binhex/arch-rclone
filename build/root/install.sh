@@ -159,12 +159,9 @@ else
 	export RCLONE_OPERATION="copy"
 fi
 
-export RCLONE_MAX_TRANSFERS=$(echo "${RCLONE_MAX_TRANSFERS}" | sed -e 's~^[ \t]*~~;s~[ \t]*$~~')
-if [[ ! -z "${RCLONE_MAX_TRANSFERS}" ]]; then
-	echo "[info] RCLONE_MAX_TRANSFERS defined as '${RCLONE_MAX_TRANSFERS}'" | ts '%Y-%m-%d %H:%M:%.S'
-else
-	echo "[info] RCLONE_MAX_TRANSFERS not defined,(via -e RCLONE_MAX_TRANSFERS), defaulting to '4'" | ts '%Y-%m-%d %H:%M:%.S'
-	export RCLONE_MAX_TRANSFERS="4"
+export RCLONE_USER_FLAGS=$(echo "${RCLONE_USER_FLAGS}" | sed -e 's~^[ \t]*~~;s~[ \t]*$~~')
+if [[ ! -z "${RCLONE_USER_FLAGS}" ]]; then
+	echo "[info] RCLONE_USER_FLAGS defined as '${RCLONE_USER_FLAGS}'" | ts '%Y-%m-%d %H:%M:%.S'
 fi
 
 export ENABLE_WEBUI=$(echo "${ENABLE_WEBUI}" | sed -e 's~^[ \t]*~~;s~[ \t]*$~~')

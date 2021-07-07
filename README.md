@@ -27,7 +27,7 @@ docker run -d \
     -e RCLONE_MEDIA_SHARES=<media share names to copy|sync> \
     -e RCLONE_REMOTE_NAME=<rclone remote name in config file> \
     -e RCLONE_SLEEP_PERIOD=<period to sleep between rclone copy|sync> \
-    -e RCLONE_MAX_TRANSFERS=<max number of parallel transfers> \
+    -e RCLONE_USER_FLAGS=<user defined rclone flags> \
     -e RCLONE_OPERATION=copy|sync \
     -e ENABLE_WEBUI=yes|no \
     -e WEBUI_USER=<rclone web ui username> \
@@ -59,7 +59,7 @@ docker run -d \
     -e RCLONE_MEDIA_SHARES=Music,Pictures,Videos \
     -e RCLONE_REMOTE_NAME=onedrive-business-encrypt \
     -e RCLONE_SLEEP_PERIOD=24h \
-    -e RCLONE_MAX_TRANSFERS=4 \
+    -e RCLONE_USER_FLAGS='-- transfers 5' \
     -e RCLONE_OPERATION=copy \
     -e ENABLE_WEBUI=yes \
     -e WEBUI_USER=admin \
