@@ -57,7 +57,7 @@ docker run -d \
     -v /apps/docker/radarr:/config \
     -v /etc/localtime:/etc/localtime:ro \
     -e RCLONE_CONFIG_PATH=/config/rclone/config/rclone.conf \
-    -e RCLONE_MEDIA_SHARES=Music,Pictures,Videos \
+    -e RCLONE_MEDIA_SHARES=/Media/Music,/Media/Pictures,/Media/Videos \
     -e RCLONE_REMOTE_NAME=onedrive-business-encrypt \
     -e RCLONE_SLEEP_PERIOD=24h \
     -e RCLONE_USER_FLAGS='-- transfers 5' \
