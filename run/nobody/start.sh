@@ -38,16 +38,16 @@ while true; do
 			# parameter as perm fix, but this is currently json only and requires all other
 			# parameters to be re-defined as json also as you cannot mix parameters and json.
 			# for ref json looks like this:- --json '{"_async": true}'
-			/usr/bin/rclone rc "sync/${RCLONE_OPERATION}" srcFs="/media/${rclone_media_shares_item}" dstFs="${RCLONE_REMOTE_NAME}:/${rclone_media_shares_item}" --config="${RCLONE_CONFIG_PATH}" ${RCLONE_USER_FLAGS} --timeout=0 --rc-user=${WEBUI_USER} --rc-pass=${WEBUI_PASS} --log-file="${rclone_log}" --log-level INFO
+			/usr/bin/rclone rc "sync/${RCLONE_OPERATION}" srcFs="${rclone_media_shares_item}" dstFs="${RCLONE_REMOTE_NAME}:/${rclone_media_shares_item}" --config="${RCLONE_CONFIG_PATH}" ${RCLONE_USER_FLAGS} --timeout=0 --rc-user=${WEBUI_USER} --rc-pass=${WEBUI_PASS} --log-file="${rclone_log}" --log-level INFO
 		else
-			/usr/bin/rclone "${RCLONE_OPERATION}" "/media/${rclone_media_shares_item}" "${RCLONE_REMOTE_NAME}:/${rclone_media_shares_item}" --config="${RCLONE_CONFIG_PATH}" ${RCLONE_USER_FLAGS} --log-file="${rclone_log}" --log-level INFO
+			/usr/bin/rclone "${RCLONE_OPERATION}" "${rclone_media_shares_item}" "${RCLONE_REMOTE_NAME}:/${rclone_media_shares_item}" --config="${RCLONE_CONFIG_PATH}" ${RCLONE_USER_FLAGS} --log-file="${rclone_log}" --log-level INFO
 		fi
 		echo "[info] rclone for media share '${rclone_media_shares_item}' finished"
 
 		if [[ "${RCLONE_CHECK}" == 'yes' ]]; then
 			rclone_media_shares_item_report_name=${rclone_media_shares_item////-}
 			echo "[info] Running rclone check for media share '${rclone_media_shares_item}', report located at '/config/rclone/reports/combined-${rclone_media_shares_item_report_name,,}.txt'..."
-			mkdir -p '/config/rclone/reports' ; /usr/bin/rclone check "/media/${rclone_media_shares_item}" "${RCLONE_REMOTE_NAME}:/${rclone_media_shares_item}" --config="${RCLONE_CONFIG_PATH}" --one-way --combined "/config/rclone/reports/combined-${rclone_media_shares_item_report_name,,}.txt"
+			mkdir -p '/config/rclone/reports' ; /usr/bin/rclone check "${rclone_media_shares_item}" "${RCLONE_REMOTE_NAME}:/${rclone_media_shares_item}" --config="${RCLONE_CONFIG_PATH}" --one-way --combined "/config/rclone/reports/combined${rclone_media_shares_item_report_name,,}.txt"
 		fi
 
 	done
