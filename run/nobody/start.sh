@@ -44,8 +44,13 @@ while true; do
 		fi
 		echo "[info] rclone for media share '${rclone_media_shares_item}' finished"
 
-	done
+		if [[ "${RCLONE_CHECK}" == 'yes' ]]; then
+			rclone_media_shares_item_report_name=${rclone_media_shares_item////-}
+			echo "[info] Running rclone check for media share '${rclone_media_shares_item}', report located at '/config/rclone/reports/combined-${rclone_media_shares_item_report_name,,}.txt'..."
+			mkdir -p '/config/rclone/reports' ; /usr/bin/rclone check "/media/${rclone_media_shares_item}" "${RCLONE_REMOTE_NAME}:/${rclone_media_shares_item}" --config="${RCLONE_CONFIG_PATH}" --one-way --combined "/config/rclone/reports/combined-${rclone_media_shares_item_report_name,,}.txt"
+		fi
 
+	done
 	echo "[info] rclone finished, sleeping ${RCLONE_SLEEP_PERIOD} before re-running..."
 	sleep "${RCLONE_SLEEP_PERIOD}"
 

@@ -159,6 +159,14 @@ else
 	export RCLONE_OPERATION="copy"
 fi
 
+export RCLONE_CHECK=$(echo "${RCLONE_CHECK,,}" | sed -e 's~^[ \t]*~~;s~[ \t]*$~~')
+if [[ ! -z "${RCLONE_CHECK}" ]]; then
+	echo "[info] RCLONE_CHECK defined as '${RCLONE_CHECK}'" | ts '%Y-%m-%d %H:%M:%.S'
+else
+	echo "[info] RCLONE_CHECK not defined,(via -e RCLONE_CHECK), defaulting to 'yes'" | ts '%Y-%m-%d %H:%M:%.S'
+	export RCLONE_CHECK="yes"
+fi
+
 export RCLONE_USER_FLAGS=$(echo "${RCLONE_USER_FLAGS}" | sed -e 's~^[ \t]*~~;s~[ \t]*$~~')
 if [[ ! -z "${RCLONE_USER_FLAGS}" ]]; then
 	echo "[info] RCLONE_USER_FLAGS defined as '${RCLONE_USER_FLAGS}'" | ts '%Y-%m-%d %H:%M:%.S'

@@ -29,6 +29,7 @@ docker run -d \
     -e RCLONE_SLEEP_PERIOD=<period to sleep between rclone copy|sync> \
     -e RCLONE_USER_FLAGS=<user defined rclone flags> \
     -e RCLONE_OPERATION=copy|sync \
+    -e RCLONE_CHECK=yes|no \
     -e ENABLE_WEBUI=yes|no \
     -e WEBUI_USER=<rclone web ui username> \
     -e WEBUI_PASS=<rclone web ui password> \
@@ -61,6 +62,7 @@ docker run -d \
     -e RCLONE_SLEEP_PERIOD=24h \
     -e RCLONE_USER_FLAGS='-- transfers 5' \
     -e RCLONE_OPERATION=copy \
+    -e RCLONE_CHECK=yes \
     -e ENABLE_WEBUI=yes \
     -e WEBUI_USER=admin \
     -e WEBUI_PASS=rclone \
