@@ -38,7 +38,7 @@ while true; do
 			continue
 		fi
 
-		echo "[info] rclone for media share '${rclone_media_shares_item}' started"
+		echo "[info] rclone ${RCLONE_OPERATION} for media share '${rclone_media_shares_item}' started"
 		# if web ui enabled then send rclone commands to web ui rcd, else run rclone cli
 		if [[ "${ENABLE_WEBUI}" == 'yes' ]]; then
 			# note timeout set to 0 to disable, waiting on rclone dev's to add in async
@@ -49,7 +49,7 @@ while true; do
 		else
 			/usr/bin/rclone "${RCLONE_OPERATION}" "${rclone_media_shares_item}" "${RCLONE_REMOTE_NAME}:${rclone_media_shares_item}" --config="${RCLONE_CONFIG_PATH}" ${RCLONE_USER_FLAGS} --log-file="${rclone_log}" --log-level INFO
 		fi
-		echo "[info] rclone for media share '${rclone_media_shares_item}' finished"
+		echo "[info] rclone ${RCLONE_OPERATION} for media share '${rclone_media_shares_item}' finished"
 
 		if [[ "${RCLONE_POST_CHECK}" == 'yes' ]]; then
 			# replace forward slashes with hyphens
