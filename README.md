@@ -30,6 +30,7 @@ docker run -d \
     -e RCLONE_USER_FLAGS=<user defined rclone flags> \
     -e RCLONE_OPERATION=copy|sync \
     -e RCLONE_POST_CHECK=yes|no \
+    -e RCLONE_POST_REPORT=combined|differ|error|match|missing-on-dst|missing-on-src \
     -e ENABLE_WEBUI=yes|no \
     -e WEBUI_USER=<rclone web ui username> \
     -e WEBUI_PASS=<rclone web ui password> \
@@ -63,6 +64,7 @@ docker run -d \
     -e RCLONE_USER_FLAGS='-- transfers 5' \
     -e RCLONE_OPERATION=copy \
     -e RCLONE_POST_CHECK=yes \
+    -e RCLONE_POST_REPORT=combined \
     -e ENABLE_WEBUI=yes \
     -e WEBUI_USER=admin \
     -e WEBUI_PASS=rclone \

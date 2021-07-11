@@ -167,6 +167,16 @@ else
 	export RCLONE_POST_CHECK="yes"
 fi
 
+if [[ "${RCLONE_POST_CHECK}" == "yes" ]]; then
+	export RCLONE_POST_REPORT=$(echo "${RCLONE_POST_REPORT,,}" | sed -e 's~^[ \t]*~~;s~[ \t]*$~~')
+	if [[ ! -z "${RCLONE_POST_REPORT}" ]]; then
+		echo "[info] RCLONE_POST_REPORT defined as '${RCLONE_POST_REPORT}'" | ts '%Y-%m-%d %H:%M:%.S'
+	else
+		echo "[info] RCLONE_POST_REPORT not defined,(via -e RCLONE_POST_REPORT), defaulting to 'combined'" | ts '%Y-%m-%d %H:%M:%.S'
+		export RCLONE_POST_REPORT="combined"
+	fi
+fi
+
 export RCLONE_USER_FLAGS=$(echo "${RCLONE_USER_FLAGS}" | sed -e 's~^[ \t]*~~;s~[ \t]*$~~')
 if [[ ! -z "${RCLONE_USER_FLAGS}" ]]; then
 	echo "[info] RCLONE_USER_FLAGS defined as '${RCLONE_USER_FLAGS}'" | ts '%Y-%m-%d %H:%M:%.S'
@@ -180,7 +190,7 @@ else
 	export ENABLE_WEBUI="yes"
 fi
 
-if [[ $ENABLE_WEBUI == "yes" ]]; then
+if [[ "${ENABLE_WEBUI}" == "yes" ]]; then
 	export WEBUI_USER=$(echo "${WEBUI_USER}" | sed -e 's~^[ \t]*~~;s~[ \t]*$~~')
 	if [[ ! -z "${WEBUI_USER}" ]]; then
 		echo "[info] WEBUI_USER defined as '${WEBUI_USER}'" | ts '%Y-%m-%d %H:%M:%.S'

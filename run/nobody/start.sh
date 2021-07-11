@@ -28,10 +28,17 @@ fi
 
 while true; do
 
+	echo "[info] Running rclone, check rclone log file '${rclone_log}' for output..."
+
 	# loop over list of media share names
 	for rclone_media_shares_item in "${rclone_media_shares_list[@]}"; do
 
-		echo "[info] Running rclone for media share '${rclone_media_shares_item}', check rclone log file '${rclone_log}' for output..."
+		if [[ ! -d "${rclone_media_shares_item}" ]]; then
+			echo "[warn] Media share '${rclone_media_shares_item}' does not exist, skipping"
+			continue
+		fi
+
+		echo "[info] rclone for media share '${rclone_media_shares_item}' started"
 		# if web ui enabled then send rclone commands to web ui rcd, else run rclone cli
 		if [[ "${ENABLE_WEBUI}" == 'yes' ]]; then
 			# note timeout set to 0 to disable, waiting on rclone dev's to add in async
@@ -45,12 +52,14 @@ while true; do
 		echo "[info] rclone for media share '${rclone_media_shares_item}' finished"
 
 		if [[ "${RCLONE_POST_CHECK}" == 'yes' ]]; then
+			# replace forward slashes with hyphens
 			rclone_media_shares_item_report_name=${rclone_media_shares_item////-}
-			echo "[info] Running rclone check for media share '${rclone_media_shares_item}', report located at '/config/rclone/reports/combined-${rclone_media_shares_item_report_name,,}.txt'..."
-			mkdir -p '/config/rclone/reports' ; /usr/bin/rclone check "${rclone_media_shares_item}" "${RCLONE_REMOTE_NAME}:/${rclone_media_shares_item}" --config="${RCLONE_CONFIG_PATH}" --one-way --combined "/config/rclone/reports/combined${rclone_media_shares_item_report_name,,}.txt"
+			echo "[info] Running rclone check for media share '${rclone_media_shares_item}', report located at '/config/rclone/reports/${RCLONE_POST_REPORT}${rclone_media_shares_item_report_name,,}.txt'..."
+			mkdir -p '/config/rclone/reports' ; /usr/bin/rclone check "${rclone_media_shares_item}" "${RCLONE_REMOTE_NAME}:/${rclone_media_shares_item}" --config="${RCLONE_CONFIG_PATH}" --one-way "--${RCLONE_POST_REPORT}" "/config/rclone/reports/${RCLONE_POST_REPORT}${rclone_media_shares_item_report_name,,}.txt"
 		fi
 
 	done
+
 	echo "[info] rclone finished, sleeping ${RCLONE_SLEEP_PERIOD} before re-running..."
 	sleep "${RCLONE_SLEEP_PERIOD}"
 
