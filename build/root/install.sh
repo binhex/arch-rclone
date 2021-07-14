@@ -123,8 +123,8 @@ else
 fi
 
 if [ ! -f "${RCLONE_CONFIG_PATH}" ]; then
-	echo "[crit] RCLONE_CONFIG_PATH '${RCLONE_CONFIG_PATH}' does not exist, exiting script..." | ts '%Y-%m-%d %H:%M:%.S'
-	exit 1
+	echo "[warn] RCLONE_CONFIG_PATH '${RCLONE_CONFIG_PATH}' does not exist, please run 'rclone config --config /config/rclone/config/config.conf' from within the container" | ts '%Y-%m-%d %H:%M:%.S'
+	sleep infinity
 fi
 
 export RCLONE_MEDIA_SHARES=$(echo "${RCLONE_MEDIA_SHARES}" | sed -e 's~^[ \t]*~~;s~[ \t]*$~~')
