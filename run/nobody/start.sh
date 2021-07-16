@@ -55,7 +55,7 @@ while true; do
 			# replace forward slashes with hyphens
 			rclone_media_shares_item_report_name=${rclone_media_shares_item////-}
 			echo "[info] Running rclone check for media share '${rclone_media_shares_item}', report located at '/config/rclone/reports/${RCLONE_POST_REPORT}${rclone_media_shares_item_report_name,,}.txt'..."
-			mkdir -p '/config/rclone/reports' ; /usr/bin/rclone check "${rclone_media_shares_item}" "${RCLONE_REMOTE_NAME}:${rclone_media_shares_item}" --config="${RCLONE_CONFIG_PATH}" --one-way "--${RCLONE_POST_REPORT}" "/config/rclone/reports/${RCLONE_POST_REPORT}${rclone_media_shares_item_report_name,,}.txt"
+			mkdir -p '/config/rclone/reports' ; /usr/bin/rclone check "${rclone_media_shares_item}" "${RCLONE_REMOTE_NAME}:${rclone_media_shares_item}" --config="${RCLONE_CONFIG_PATH}" --one-way "--${RCLONE_POST_REPORT}" "/config/rclone/reports/${RCLONE_POST_REPORT}${rclone_media_shares_item_report_name,,}.txt" &> "/config/rclone/reports/${RCLONE_POST_REPORT}${rclone_media_shares_item_report_name,,}.txt"
 		fi
 
 	done
