@@ -118,13 +118,13 @@ export RCLONE_CONFIG_PATH=$(echo "${RCLONE_CONFIG_PATH}" | sed -e 's~^[ \t]*~~;s
 if [[ ! -z "${RCLONE_CONFIG_PATH}" ]]; then
 	echo "[info] RCLONE_CONFIG_PATH defined as '${RCLONE_CONFIG_PATH}'" | ts '%Y-%m-%d %H:%M:%.S'
 else
+	# create path to store config and set permissions as we are doing this as root
+	mkdir -p '/config/rclone/config'
+	chown -R "${PUID}:${PGID}" '/config/rclone/config'
+
 	echo "[info] RCLONE_CONFIG_PATH not defined,(via -e RCLONE_CONFIG_PATH), defaulting to '/config/rclone/config/rclone.conf'" | ts '%Y-%m-%d %H:%M:%.S'
 	export RCLONE_CONFIG_PATH="/config/rclone/config/rclone.conf"
 fi
-
-# create path to store config and set permissions as we are doing this as root
-mkdir -p "${RCLONE_CONFIG_PATH}"
-chown -R "${PUID}:${PGID}" "${RCLONE_CONFIG_PATH}"
 
 if [ ! -f "${RCLONE_CONFIG_PATH}" ]; then
 	echo "[warn] RCLONE_CONFIG_PATH '${RCLONE_CONFIG_PATH}' does not exist, please run 'rclone config --config /config/rclone/config/config.conf' from within the container" | ts '%Y-%m-%d %H:%M:%.S'
