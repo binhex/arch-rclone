@@ -4,10 +4,13 @@ rclone_log="/config/rclone/logs/rclone.log"
 rclone_webui_log="/config/rclone/logs/rclone_webui.log"
 
 # create folder structure for config, temp and logs
-mkdir -p /config/rclone/config /config/rclone/logs
+mkdir -p '/config/rclone/logs'
 
 # log rotate rclone log (background)
 nohup /bin/bash -c "source /usr/local/bin/utils.sh && log_rotate --log-path '${rclone_log}' >> '/config/supervisord.log'" &
+
+# log rotate rclone_webui log (background)
+nohup /bin/bash -c "source /usr/local/bin/utils.sh && log_rotate --log-path '${rclone_webui_log}' >> '/config/supervisord.log'" &
 
 # split comma separated media shares
 IFS=',' read -ra rclone_media_shares_list <<< "${RCLONE_MEDIA_SHARES}"

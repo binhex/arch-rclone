@@ -122,6 +122,10 @@ else
 	export RCLONE_CONFIG_PATH="/config/rclone/config/rclone.conf"
 fi
 
+# create path to store config and set permissions as we are doing this as root
+mkdir -p "${RCLONE_CONFIG_PATH}"
+chown -R "${PUID}:${PGID}" "${RCLONE_CONFIG_PATH}"
+
 if [ ! -f "${RCLONE_CONFIG_PATH}" ]; then
 	echo "[warn] RCLONE_CONFIG_PATH '${RCLONE_CONFIG_PATH}' does not exist, please run 'rclone config --config /config/rclone/config/config.conf' from within the container" | ts '%Y-%m-%d %H:%M:%.S'
 	sleep infinity
