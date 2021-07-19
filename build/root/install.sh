@@ -123,7 +123,7 @@ else
 fi
 
 # construct basedir from rclone config path
-rclone_config_basedir=echo "$(dirname "${RCLONE_CONFIG_PATH}")"
+rclone_config_basedir="$(dirname "${RCLONE_CONFIG_PATH}")"
 
 # create path to store config and set permissions as we are doing this as root
 mkdir -p "${rclone_config_basedir}"
