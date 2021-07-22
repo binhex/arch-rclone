@@ -118,7 +118,7 @@ export RCLONE_CONFIG_PATH=$(echo "${RCLONE_CONFIG_PATH}" | sed -e 's~^[ \t]*~~;s
 if [[ ! -z "${RCLONE_CONFIG_PATH}" ]]; then
 	echo "[info] RCLONE_CONFIG_PATH defined as '${RCLONE_CONFIG_PATH}'" | ts '%Y-%m-%d %H:%M:%.S'
 else
-	echo "[info] RCLONE_CONFIG_PATH not defined,(via -e RCLONE_CONFIG_PATH), defaulting to '/config/rclone/config/rclone.conf'" | ts '%Y-%m-%d %H:%M:%.S'
+	echo "[info] RCLONE_CONFIG_PATH not defined (via -e RCLONE_CONFIG_PATH), defaulting to '/config/rclone/config/rclone.conf'" | ts '%Y-%m-%d %H:%M:%.S'
 	export RCLONE_CONFIG_PATH="/config/rclone/config/rclone.conf"
 fi
 
@@ -138,7 +138,7 @@ export RCLONE_MEDIA_SHARES=$(echo "${RCLONE_MEDIA_SHARES}" | sed -e 's~^[ \t]*~~
 if [[ ! -z "${RCLONE_MEDIA_SHARES}" ]]; then
 	echo "[info] RCLONE_MEDIA_SHARES defined as '${RCLONE_MEDIA_SHARES}'" | ts '%Y-%m-%d %H:%M:%.S'
 else
-	echo "[crit] RCLONE_MEDIA_SHARES not defined,(via -e RCLONE_MEDIA_SHARES), exiting script..." | ts '%Y-%m-%d %H:%M:%.S'
+	echo "[crit] RCLONE_MEDIA_SHARES not defined (via -e RCLONE_MEDIA_SHARES), exiting script..." | ts '%Y-%m-%d %H:%M:%.S'
 	exit 1
 fi
 
@@ -146,7 +146,7 @@ export RCLONE_REMOTE_NAME=$(echo "${RCLONE_REMOTE_NAME}" | sed -e 's~^[ \t]*~~;s
 if [[ ! -z "${RCLONE_REMOTE_NAME}" ]]; then
 	echo "[info] RCLONE_REMOTE_NAME defined as '${RCLONE_REMOTE_NAME}'" | ts '%Y-%m-%d %H:%M:%.S'
 else
-	echo "[crit] RCLONE_REMOTE_NAME not defined,(via -e RCLONE_REMOTE_NAME), exiting script..." | ts '%Y-%m-%d %H:%M:%.S'
+	echo "[crit] RCLONE_REMOTE_NAME not defined (via -e RCLONE_REMOTE_NAME), exiting script..." | ts '%Y-%m-%d %H:%M:%.S'
 	exit 1
 fi
 
@@ -154,7 +154,7 @@ export RCLONE_SLEEP_PERIOD=$(echo "${RCLONE_SLEEP_PERIOD}" | sed -e 's~^[ \t]*~~
 if [[ ! -z "${RCLONE_SLEEP_PERIOD}" ]]; then
 	echo "[info] RCLONE_SLEEP_PERIOD defined as '${RCLONE_SLEEP_PERIOD}'" | ts '%Y-%m-%d %H:%M:%.S'
 else
-	echo "[info] RCLONE_SLEEP_PERIOD not defined,(via -e RCLONE_SLEEP_PERIOD), defaulting to '24h'" | ts '%Y-%m-%d %H:%M:%.S'
+	echo "[info] RCLONE_SLEEP_PERIOD not defined (via -e RCLONE_SLEEP_PERIOD), defaulting to '24h'" | ts '%Y-%m-%d %H:%M:%.S'
 	export RCLONE_SLEEP_PERIOD="24h"
 fi
 
@@ -162,7 +162,7 @@ export RCLONE_OPERATION=$(echo "${RCLONE_OPERATION,,}" | sed -e 's~^[ \t]*~~;s~[
 if [[ ! -z "${RCLONE_OPERATION}" ]]; then
 	echo "[info] RCLONE_OPERATION defined as '${RCLONE_OPERATION}'" | ts '%Y-%m-%d %H:%M:%.S'
 else
-	echo "[info] RCLONE_OPERATION not defined,(via -e RCLONE_OPERATION), defaulting to 'copy'" | ts '%Y-%m-%d %H:%M:%.S'
+	echo "[info] RCLONE_OPERATION not defined (via -e RCLONE_OPERATION), defaulting to 'copy'" | ts '%Y-%m-%d %H:%M:%.S'
 	export RCLONE_OPERATION="copy"
 fi
 
@@ -170,7 +170,7 @@ export RCLONE_POST_CHECK=$(echo "${RCLONE_POST_CHECK,,}" | sed -e 's~^[ \t]*~~;s
 if [[ ! -z "${RCLONE_POST_CHECK}" ]]; then
 	echo "[info] RCLONE_POST_CHECK defined as '${RCLONE_POST_CHECK}'" | ts '%Y-%m-%d %H:%M:%.S'
 else
-	echo "[info] RCLONE_POST_CHECK not defined,(via -e RCLONE_POST_CHECK), defaulting to 'yes'" | ts '%Y-%m-%d %H:%M:%.S'
+	echo "[info] RCLONE_POST_CHECK not defined (via -e RCLONE_POST_CHECK), defaulting to 'yes'" | ts '%Y-%m-%d %H:%M:%.S'
 	export RCLONE_POST_CHECK="yes"
 fi
 
@@ -179,7 +179,7 @@ if [[ "${RCLONE_POST_CHECK}" == "yes" ]]; then
 	if [[ ! -z "${RCLONE_POST_REPORT}" ]]; then
 		echo "[info] RCLONE_POST_REPORT defined as '${RCLONE_POST_REPORT}'" | ts '%Y-%m-%d %H:%M:%.S'
 	else
-		echo "[info] RCLONE_POST_REPORT not defined,(via -e RCLONE_POST_REPORT), defaulting to 'combined'" | ts '%Y-%m-%d %H:%M:%.S'
+		echo "[info] RCLONE_POST_REPORT not defined (via -e RCLONE_POST_REPORT), defaulting to 'combined'" | ts '%Y-%m-%d %H:%M:%.S'
 		export RCLONE_POST_REPORT="combined"
 	fi
 fi
