@@ -12,7 +12,7 @@ Users call rclone "The Swiss army knife of cloud storage", and "Technology indis
 
 **Build notes**
 
-Latest stable Radarr release from Arch Repository.
+Latest stable Rclone release from Arch Repository.
 
 **Usage**
 ```
