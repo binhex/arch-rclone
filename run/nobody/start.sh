@@ -15,6 +15,9 @@ nohup /bin/bash -c "source /usr/local/bin/utils.sh && log_rotate --log-path '${r
 # split comma separated media shares
 IFS=',' read -ra rclone_media_shares_list <<< "${RCLONE_MEDIA_SHARES}"
 
+# split comma separated remote name
+IFS=',' read -ra rclone_remote_name_list <<< "${RCLONE_REMOTE_NAME}"
+
 # if web ui enabled then run rclone web ui in rcd mode (listening to remote control commands only)
 if [[ "${ENABLE_WEBUI}" == 'yes' ]]; then
 	nohup /usr/bin/rclone rcd --config="${RCLONE_CONFIG_PATH}" --rc-web-gui --rc-addr 0.0.0.0:5572 --rc-web-gui-no-open-browser --rc-user=${WEBUI_USER} --rc-pass=${WEBUI_PASS} ${RCLONE_USER_FLAGS} --log-file="${rclone_webui_log}" --log-level INFO &
@@ -33,33 +36,39 @@ while true; do
 
 	echo "[info] Running rclone, check rclone log file '${rclone_log}' for output..."
 
-	# loop over list of media share names
-	for rclone_media_shares_item in "${rclone_media_shares_list[@]}"; do
+	# loop over list of remote names
+	for rclone_remote_name_item in "${rclone_remote_name_list[@]}"; do
 
-		if [[ ! -d "${rclone_media_shares_item}" ]]; then
-			echo "[warn] Media share '${rclone_media_shares_item}' does not exist, skipping"
-			continue
-		fi
+		# loop over list of media share names
+		for rclone_media_shares_item in "${rclone_media_shares_list[@]}"; do
 
-		echo "[info] rclone ${RCLONE_OPERATION} for media share '${rclone_media_shares_item}' started"
-		# if web ui enabled then send rclone commands to web ui rcd, else run rclone cli
-		if [[ "${ENABLE_WEBUI}" == 'yes' ]]; then
-			# note timeout set to 0 to disable, waiting on rclone dev's to add in async
-			# parameter as perm fix, but this is currently json only and requires all other
-			# parameters to be re-defined as json also as you cannot mix parameters and json.
-			# for ref json looks like this:- --json '{"_async": true}'
-			/usr/bin/rclone rc "sync/${RCLONE_OPERATION}" srcFs="${rclone_media_shares_item}" dstFs="${RCLONE_REMOTE_NAME}:${rclone_media_shares_item}" --config="${RCLONE_CONFIG_PATH}" ${RCLONE_USER_FLAGS} --timeout=0 --rc-user=${WEBUI_USER} --rc-pass=${WEBUI_PASS} --log-file="${rclone_log}" --log-level INFO
-		else
-			/usr/bin/rclone "${RCLONE_OPERATION}" "${rclone_media_shares_item}" "${RCLONE_REMOTE_NAME}:${rclone_media_shares_item}" --config="${RCLONE_CONFIG_PATH}" ${RCLONE_USER_FLAGS} --log-file="${rclone_log}" --log-level INFO
-		fi
-		echo "[info] rclone ${RCLONE_OPERATION} for media share '${rclone_media_shares_item}' finished"
+			if [[ ! -d "${rclone_media_shares_item}" ]]; then
+				echo "[warn] Media share '${rclone_media_shares_item}' does not exist, skipping"
+				continue
+			fi
 
-		if [[ "${RCLONE_POST_CHECK}" == 'yes' ]]; then
-			# replace forward slashes with hyphens
-			rclone_media_shares_item_report_name=${rclone_media_shares_item////-}
-			echo "[info] Running rclone check for media share '${rclone_media_shares_item}', report located at '/config/rclone/reports/${RCLONE_POST_REPORT}${rclone_media_shares_item_report_name,,}.txt'..."
-			mkdir -p '/config/rclone/reports' ; /usr/bin/rclone check "${rclone_media_shares_item}" "${RCLONE_REMOTE_NAME}:${rclone_media_shares_item}" --config="${RCLONE_CONFIG_PATH}" --one-way "--${RCLONE_POST_REPORT}" "/config/rclone/reports/${RCLONE_POST_REPORT}${rclone_media_shares_item_report_name,,}.txt" &> "/config/rclone/reports/${RCLONE_POST_REPORT}${rclone_media_shares_item_report_name,,}.txt"
-		fi
+			echo "[info] rclone ${RCLONE_OPERATION} for local media share '${rclone_media_shares_item}' to remote '${rclone_remote_name_item}' running..."
+
+			# if web ui enabled then send rclone commands to web ui rcd, else run rclone cli
+			if [[ "${ENABLE_WEBUI}" == 'yes' ]]; then
+				# note timeout set to 0 to disable, waiting on rclone dev's to add in async
+				# parameter as perm fix, but this is currently json only and requires all other
+				# parameters to be re-defined as json also as you cannot mix parameters and json.
+				# for ref json looks like this:- --json '{"_async": true}'
+				/usr/bin/rclone rc "sync/${RCLONE_OPERATION}" srcFs="${rclone_media_shares_item}" dstFs="${rclone_remote_name_item}:${rclone_media_shares_item}" --config="${RCLONE_CONFIG_PATH}" ${RCLONE_USER_FLAGS} --timeout=0 --rc-user=${WEBUI_USER} --rc-pass=${WEBUI_PASS} --log-file="${rclone_log}" --log-level INFO
+			else
+				/usr/bin/rclone "${RCLONE_OPERATION}" "${rclone_media_shares_item}" "${rclone_remote_name_item}:${rclone_media_shares_item}" --config="${RCLONE_CONFIG_PATH}" ${RCLONE_USER_FLAGS} --log-file="${rclone_log}" --log-level INFO
+			fi
+			echo "[info] rclone ${RCLONE_OPERATION} for local media share '${rclone_media_shares_item}' to remote '${rclone_remote_name_item}' finished"
+
+			if [[ "${RCLONE_POST_CHECK}" == 'yes' ]]; then
+				# replace forward slashes with hyphens
+				rclone_media_shares_item_report_name=${rclone_media_shares_item////-}
+				echo "[info] Running rclone check for media share '${rclone_media_shares_item}', report located at '/config/rclone/reports/${rclone_remote_name_item}-${RCLONE_POST_REPORT}${rclone_media_shares_item_report_name,,}.txt'..."
+				mkdir -p '/config/rclone/reports' ; /usr/bin/rclone check "${rclone_media_shares_item}" "${rclone_remote_name_item}:${rclone_media_shares_item}" --config="${RCLONE_CONFIG_PATH}" --one-way "--${RCLONE_POST_REPORT}" "/config/rclone/reports/${rclone_remote_name_item}-${RCLONE_POST_REPORT}${rclone_media_shares_item_report_name,,}.txt" &> "/config/rclone/reports/${rclone_remote_name_item}-${RCLONE_POST_REPORT}${rclone_media_shares_item_report_name,,}.txt"
+			fi
+
+		done
 
 	done
 
