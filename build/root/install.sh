@@ -166,6 +166,14 @@ else
 	export RCLONE_OPERATION="copy"
 fi
 
+export RCLONE_DIRECTION=$(echo "${RCLONE_DIRECTION,,}" | sed -e 's~^[ \t]*~~;s~[ \t]*$~~')
+if [[ ! -z "${RCLONE_DIRECTION}" ]]; then
+	echo "[info] RCLONE_DIRECTION defined as '${RCLONE_DIRECTION}'" | ts '%Y-%m-%d %H:%M:%.S'
+else
+	echo "[info] RCLONE_DIRECTION not defined (via -e RCLONE_DIRECTION), defaulting to 'localtoremote'" | ts '%Y-%m-%d %H:%M:%.S'
+	export RCLONE_DIRECTION="localtoremote"
+fi
+
 export RCLONE_POST_CHECK=$(echo "${RCLONE_POST_CHECK,,}" | sed -e 's~^[ \t]*~~;s~[ \t]*$~~')
 if [[ ! -z "${RCLONE_POST_CHECK}" ]]; then
 	echo "[info] RCLONE_POST_CHECK defined as '${RCLONE_POST_CHECK}'" | ts '%Y-%m-%d %H:%M:%.S'

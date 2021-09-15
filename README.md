@@ -29,6 +29,7 @@ docker run -d \
     -e RCLONE_SLEEP_PERIOD=<period to sleep between rclone copy|sync> \
     -e RCLONE_USER_FLAGS=<user defined rclone flags> \
     -e RCLONE_OPERATION=copy|sync \
+    -e RCLONE_DIRECTION=localtoremote|remotetolocal|both \
     -e RCLONE_POST_CHECK=yes|no \
     -e RCLONE_POST_REPORT=combined|differ|error|match|missing-on-dst|missing-on-src \
     -e ENABLE_WEBUI=yes|no \
@@ -63,6 +64,7 @@ docker run -d \
     -e RCLONE_SLEEP_PERIOD=24h \
     -e RCLONE_USER_FLAGS='-- transfers 5' \
     -e RCLONE_OPERATION=copy \
+    -e RCLONE_DIRECTION=localtoremote \
     -e RCLONE_POST_CHECK=yes \
     -e RCLONE_POST_REPORT=combined \
     -e ENABLE_WEBUI=yes \
