@@ -160,7 +160,7 @@ function start() {
 			for rclone_media_shares_item in "${rclone_media_shares_list[@]}"; do
 
 				# strip out bucket name from media share (if present)
-				rclone_media_shares_item_strip_bucket=$(echo "${rclone_media_shares_item}" | grep -P -o -m 1 '(\/[a-zA-Z0-9\s]+)+\/?$'
+				rclone_media_shares_item_strip_bucket=$(echo "${rclone_media_shares_item}" | grep -P -o -m 1 '(\/[a-zA-Z0-9\s]+)+\/?$')
 
 				if [[ ! -d "${rclone_media_shares_item_strip_bucket}" ]]; then
 					echo "[warn] Media share '${rclone_media_shares_item_strip_bucket}' does not exist, skipping"
