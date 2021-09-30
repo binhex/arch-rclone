@@ -159,8 +159,11 @@ function start() {
 			# loop over list of media share names
 			for rclone_media_shares_item in "${rclone_media_shares_list[@]}"; do
 
-				if [[ ! -d "${rclone_media_shares_item}" ]]; then
-					echo "[warn] Media share '${rclone_media_shares_item}' does not exist, skipping"
+				# strip out bucket name from media share (if present)
+				rclone_media_shares_item_strip_bucket=$(echo "${rclone_media_shares_item}" | grep -P -o -m 1 '(\/[a-z\s]+)+\/?$')
+
+				if [[ ! -d "${rclone_media_shares_item_strip_bucket}" ]]; then
+					echo "[warn] Media share '${rclone_media_shares_item_strip_bucket}' does not exist, skipping"
 					continue
 				fi
 
