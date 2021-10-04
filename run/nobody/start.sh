@@ -58,11 +58,11 @@ function set_run_sync_flags(){
 
 		if [[ "${ENABLE_WEBUI}" == 'yes' ]]; then
 
-			sync_direction="srcFs=${rclone_media_shares_item} dstFs=${rclone_remote_name_item}:${rclone_media_shares_item}"
+			sync_direction="srcFs=${rclone_media_shares_item} dstFs=${rclone_remote_name_item}:${bucket_name}${rclone_media_shares_item}"
 
 		else
 
-			sync_direction="${rclone_media_shares_item} ${rclone_remote_name_item}:${rclone_media_shares_item}"
+			sync_direction="${rclone_media_shares_item} ${rclone_remote_name_item}:${bucket_name}${rclone_media_shares_item}"
 
 		fi
 
@@ -76,15 +76,15 @@ function set_run_sync_flags(){
 
 		if [[ "${ENABLE_WEBUI}" == 'yes' ]]; then
 
-			sync_direction="srcFs=${rclone_remote_name_item}:${rclone_media_shares_item} dstFs=${rclone_media_shares_item}"
+			sync_direction="srcFs=${rclone_remote_name_item}:${bucket_name}${rclone_media_shares_item} dstFs=${rclone_media_shares_item}"
 
 		else
 
-			sync_direction="${rclone_remote_name_item}:${rclone_media_shares_item} ${rclone_media_shares_item}"
+			sync_direction="${rclone_remote_name_item}:${bucket_name}${rclone_media_shares_item} ${rclone_media_shares_item}"
 
 		fi
 
-		echo "[info] Running rclone ${RCLONE_OPERATION} from remote '${rclone_remote_name_item}:${rclone_media_shares_item}' to local share '${rclone_media_shares_item}'..."
+		echo "[info] Running rclone ${RCLONE_OPERATION} from remote '${rclone_remote_name_item}:${bucket_name}${rclone_media_shares_item}' to local share '${rclone_media_shares_item}'..."
 		run_rclone
 		echo "[info] rclone ${RCLONE_OPERATION} finished"
 
@@ -102,7 +102,7 @@ function set_post_sync_flags(){
 		if [[ "${RCLONE_DIRECTION}" == 'localtoremote' || "${RCLONE_DIRECTION}" == 'both' ]]; then
 
 			direction="local-to-remote"
-			post_check_sync_direction="${rclone_media_shares_item} ${rclone_remote_name_item}:${rclone_media_shares_item}"
+			post_check_sync_direction="${rclone_media_shares_item} ${rclone_remote_name_item}:${bucket_name}${rclone_media_shares_item}"
 			echo "[info] Running rclone post check, report located at '/config/rclone/reports/${direction}-${rclone_remote_name_item}-${RCLONE_POST_REPORT}${rclone_media_shares_item_report_name,,}.txt'..."
 			run_rclone_post_check
 			echo "[info] rclone post check finished"
@@ -112,7 +112,7 @@ function set_post_sync_flags(){
 		if [[ "${RCLONE_DIRECTION}" == 'remotetolocal' || "${RCLONE_DIRECTION}" == 'both' ]]; then
 
 			direction="remote-to-local"
-			post_check_sync_direction="${rclone_remote_name_item}:${rclone_media_shares_item} ${rclone_media_shares_item}"
+			post_check_sync_direction="${rclone_remote_name_item}:${bucket_name}${rclone_media_shares_item} ${rclone_media_shares_item}"
 			echo "[info] Running rclone post check, report located at '/config/rclone/reports/${direction}-${rclone_remote_name_item}-${RCLONE_POST_REPORT}${rclone_media_shares_item_report_name,,}.txt'..."
 			run_rclone_post_check
 			echo "[info] rclone post check finished"
@@ -156,14 +156,20 @@ function start() {
 		# loop over list of remote names
 		for rclone_remote_name_item in "${rclone_remote_name_list[@]}"; do
 
+			# get bucket name (if defined) <remote>:<bucket>
+			bucket_name=$(echo "${rclone_remote_name_item}" | grep -P -o -m 1 '(?<=:).*')
+			if [[ -n "${bucket_name}" ]]; then
+				echo "[info] Bucket name defined as '${bucket_name}'"
+			fi
+
+			# remoe bucket name from remote (if defined)
+			rclone_remote_name_item=$(echo "${rclone_remote_name_item}" | grep -P -o -m 1 '^[^:]+')
+
 			# loop over list of media share names
 			for rclone_media_shares_item in "${rclone_media_shares_list[@]}"; do
 
-				# strip out bucket name from media share (if present)
-				rclone_media_shares_item_strip_bucket=$(echo "${rclone_media_shares_item}" | grep -P -o -m 1 '(\/[a-zA-Z0-9\s]+)+\/?$')
-
-				if [[ ! -d "${rclone_media_shares_item_strip_bucket}" ]]; then
-					echo "[warn] Media share '${rclone_media_shares_item_strip_bucket}' does not exist, skipping"
+				if [[ ! -d "${rclone_media_shares_item}" ]]; then
+					echo "[warn] Media share '${rclone_media_shares_item}' does not exist, skipping"
 					continue
 				fi
 
