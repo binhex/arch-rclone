@@ -78,7 +78,7 @@ docker run -d \
 
 **Notes**
 
-If your cloud storage provider requires a 'bucket' defining (for instance Backblaze does) then please specify this by appending ```:<bucket name>``` to the value for ```RCLONE_REMOTE_NAME``` e.g. ```-e RCLONE_REMOTE_NAME=backblaze-business-encrypt:bucket```
+If your cloud storage provider requires a 'bucket' defining (for instance Backblaze does) then please specify this by appending ```:<bucket name>``` to the value for ```RCLONE_REMOTE_NAME``` e.g. ```-e RCLONE_REMOTE_NAME=backblaze-encrypt:bucket```
 
 User ID (PUID) and Group ID (PGID) can be found by issuing the following command for the user you want to run the container as:-
 
