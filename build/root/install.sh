@@ -41,7 +41,7 @@ fi
 source upd.sh
 
 # define pacman packages
-pacman_packages="rclone"
+pacman_packages="rclone fuse"
 
 # install compiled packages using pacman
 if [[ ! -z "${pacman_packages}" ]]; then
