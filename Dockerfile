@@ -33,12 +33,6 @@ RUN chmod +x /root/*.sh /home/nobody/*.sh && \
 # set environment variables for user nobody
 ENV HOME=/home/nobody
 
-# port used to authorise rclone (onedrive)
-EXPOSE 53682
-
-# port used for optional web ui
-EXPOSE 5572
-
 # set permissions
 #################
 
