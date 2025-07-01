@@ -1,22 +1,31 @@
-**Application**
+# Application
 
 [Rclone](https://rclone.org/)
 
-**Description**
+## Description
 
-Rclone is a command line program to manage files on cloud storage. It is a feature rich alternative to cloud vendors' web storage interfaces. Over 40 cloud storage products support rclone including S3 object stores, business & consumer file storage services, as well as standard transfer protocols.
+Rclone is a command line program to manage files on cloud storage. It is a
+feature rich alternative to cloud vendors' web storage interfaces. Over 40 cloud
+storage products support rclone including S3 object stores, business & consumer
+file storage services, as well as standard transfer protocols.
 
-Rclone has powerful cloud equivalents to the unix commands rsync, cp, mv, mount, ls, ncdu, tree, rm, and cat. Rclone's familiar syntax includes shell pipeline support, and --dry-run protection. It is used at the command line, in scripts or via its API.
+Rclone has powerful cloud equivalents to the unix commands rsync, cp, mv, mount,
+ls, ncdu, tree, rm, and cat. Rclone's familiar syntax includes shell pipeline
+support, and --dry-run protection. It is used at the command line, in scripts or
+via its API.
 
-Users call rclone "The Swiss army knife of cloud storage", and "Technology indistinguishable from magic".
+Users call rclone "The Swiss army knife of cloud storage", and "Technology
+indistinguishable from magic".
 
-**Build notes**
+## Build notes
 
 Latest stable Rclone release from Arch Repository.
 
-**Usage**
-```
+## Usage
+
+```bash
 docker run -d \
+
     -p 53682:53682 \
     -p 5572:5572 \
     --name=<container name> \
@@ -31,27 +40,36 @@ docker run -d \
     -e RCLONE_OPERATION=copy|sync \
     -e RCLONE_DIRECTION=localtoremote|remotetolocal|both \
     -e RCLONE_POST_CHECK=yes|no \
-    -e RCLONE_POST_REPORT=combined|differ|error|match|missing-on-dst|missing-on-src \
+    -e
+
+    RCLONE_POST_REPORT=combined|differ|error|match|missing-on-dst|missing-on-src
+    \
+
     -e ENABLE_WEBUI=yes|no \
     -e WEBUI_USER=<rclone web ui username> \
     -e WEBUI_PASS=<rclone web ui password> \
     -e UMASK=<umask for created files> \
     -e PUID=<uid for user> \
     -e PGID=<gid for user> \
+
     binhex/arch-rclone
+
 ```
 
-Please replace all user variables in the above command defined by <> with the correct values.
+Please replace all user variables in the above command defined by <> with the
+correct values.
 
-**Access application**
+## Access application
 
 Requires `-e ENABLE_WEBUI=yes`
 
 `http://<host ip>:5572`
 
-**Example**
-```
+## Example
+
+```bash
 docker run -d \
+
     -p 53682:53682 \
     -p 5572:5572 \
     --name=binhex-rclone \
@@ -73,18 +91,26 @@ docker run -d \
     -e UMASK=000 \
     -e PUID=0 \
     -e PGID=0 \
+
     binhex/arch-rclone
-```
-
-**Notes**
-
-If your cloud storage provider requires a 'bucket' defining (for instance Backblaze B2 does) then please specify this by appending ```:<bucket name>``` to the value for ```RCLONE_REMOTE_NAME``` e.g. ```-e RCLONE_REMOTE_NAME=backblaze-encrypt:bucket```
-
-User ID (PUID) and Group ID (PGID) can be found by issuing the following command for the user you want to run the container as:-
 
 ```
+
+## Notes
+
+If your cloud storage provider requires a 'bucket' defining (for instance
+Backblaze B2 does) then please specify this by appending ```:<bucket name>``` to
+the value for ```RCLONE_REMOTE_NAME``` e.g. ```-e
+RCLONE_REMOTE_NAME=backblaze-encrypt:bucket```
+
+User ID (PUID) and Group ID (PGID) can be found by issuing the following command
+for the user you want to run the container as:-
+
+```bash
 id <username>
+
 ```
+
 ___
 If you appreciate my work, then please consider buying me a beer  :D
 
