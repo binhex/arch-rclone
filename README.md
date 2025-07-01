@@ -25,7 +25,6 @@ Latest stable Rclone release from Arch Repository.
 
 ```bash
 docker run -d \
-
     -p 53682:53682 \
     -p 5572:5572 \
     --name=<container name> \
@@ -51,9 +50,7 @@ docker run -d \
     -e UMASK=<umask for created files> \
     -e PUID=<uid for user> \
     -e PGID=<gid for user> \
-
     binhex/arch-rclone
-
 ```
 
 Please replace all user variables in the above command defined by <> with the
@@ -69,7 +66,6 @@ Requires `-e ENABLE_WEBUI=yes`
 
 ```bash
 docker run -d \
-
     -p 53682:53682 \
     -p 5572:5572 \
     --name=binhex-rclone \
@@ -91,9 +87,7 @@ docker run -d \
     -e UMASK=000 \
     -e PUID=0 \
     -e PGID=0 \
-
     binhex/arch-rclone
-
 ```
 
 ## Notes
@@ -108,7 +102,6 @@ for the user you want to run the container as:-
 
 ```bash
 id <username>
-
 ```
 
 ___
