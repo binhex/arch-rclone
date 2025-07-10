@@ -42,7 +42,7 @@ function run_rclone_webui() {
 		echo "[info] Rclone Web UI process listening on port 5572"
 
 		# log rotate rclone web ui log (background)
-		nohup /bin/bash -c "source /usr/local/bin/utils.sh && log_rotate --log-path '${rclone_webui_log}' >> '/config/supervisord.log'" &
+		nohup /bin/bash -c "source utils.sh && log_rotate --log-path '${rclone_webui_log}' >> '/config/supervisord.log'" &
 
 	fi
 }
@@ -137,10 +137,10 @@ function start() {
 	rclone_webui_log="${rclone_log_path}/rclone_webui.log"
 
 	# log rotate rclone log (background)
-	nohup /bin/bash -c "source /usr/local/bin/utils.sh && log_rotate --log-path '${rclone_log}' >> '/config/supervisord.log'" &
+	nohup /bin/bash -c "source utils.sh && log_rotate --log-path '${rclone_log}' >> '/config/supervisord.log'" &
 
 	# log rotate rclone_webui log (background)
-	nohup /bin/bash -c "source /usr/local/bin/utils.sh && log_rotate --log-path '${rclone_webui_log}' >> '/config/supervisord.log'" &
+	nohup /bin/bash -c "source utils.sh && log_rotate --log-path '${rclone_webui_log}' >> '/config/supervisord.log'" &
 
 	# split comma separated media shares
 	IFS=',' read -ra rclone_media_shares_list <<< "${RCLONE_MEDIA_SHARES}"
