@@ -96,13 +96,27 @@ rm /tmp/permissions_heredoc
 
 cat <<'EOF' > /tmp/envvars_heredoc
 
-export RCLONE_CONFIG_PATH=$(echo "${RCLONE_CONFIG_PATH}" | sed -e 's~^[ \t]*~~;s~[ \t]*$~~')
-if [[ ! -z "${RCLONE_CONFIG_PATH}" ]]; then
-	echo "[info] RCLONE_CONFIG_PATH defined as '${RCLONE_CONFIG_PATH}'" | ts '%Y-%m-%d %H:%M:%.S'
-else
-	echo "[info] RCLONE_CONFIG_PATH not defined (via -e RCLONE_CONFIG_PATH), defaulting to '/config/rclone/config/rclone.conf'" | ts '%Y-%m-%d %H:%M:%.S'
-	export RCLONE_CONFIG_PATH="/config/rclone/config/rclone.conf"
-fi
+# source in utility functions, need process_env_var
+source utils.sh
+
+# Define environment variables to process
+# Format: "VAR_NAME:DEFAULT_VALUE:REQUIRED:MASK"
+env_vars=(
+	"RCLONE_CONFIG_PATH:/config/rclone/config/rclone.conf:false:false"
+	"RCLONE_MEDIA_SHARES::true:false"
+	"RCLONE_REMOTE_NAME::true:false"
+	"RCLONE_SLEEP_PERIOD:24h:false:false"
+	"RCLONE_USER_FLAGS::false:false"
+	"ENABLE_WEBUI:yes:false:false"
+	"ENABLE_STARTUP_SCRIPTS:no:false:false"
+	"STARTUP_SCRIPTS_MODE:wait:false:false"
+)
+
+# Process each environment variable
+for env_var in "${env_vars[@]}"; do
+	IFS=':' read -r var_name default_value required mask_value <<< "${env_var}"
+	process_env_var "${var_name}" "${default_value}" "${required}" "${mask_value}"
+done
 
 # construct basedir from rclone config path
 rclone_config_basedir="$(dirname "${RCLONE_CONFIG_PATH}")"
@@ -114,30 +128,6 @@ chown -R "${PUID}:${PGID}" "${rclone_config_basedir}"
 if [ ! -f "${RCLONE_CONFIG_PATH}" ]; then
 	echo "[warn] RCLONE_CONFIG_PATH '${RCLONE_CONFIG_PATH}' does not exist, please run 'rclone config --config ${RCLONE_CONFIG_PATH}' from within the container" | ts '%Y-%m-%d %H:%M:%.S'
 	sleep infinity
-fi
-
-export RCLONE_MEDIA_SHARES=$(echo "${RCLONE_MEDIA_SHARES}" | sed -e 's~^[ \t]*~~;s~[ \t]*$~~')
-if [[ ! -z "${RCLONE_MEDIA_SHARES}" ]]; then
-	echo "[info] RCLONE_MEDIA_SHARES defined as '${RCLONE_MEDIA_SHARES}'" | ts '%Y-%m-%d %H:%M:%.S'
-else
-	echo "[crit] RCLONE_MEDIA_SHARES not defined (via -e RCLONE_MEDIA_SHARES), exiting script..." | ts '%Y-%m-%d %H:%M:%.S'
-	exit 1
-fi
-
-export RCLONE_REMOTE_NAME=$(echo "${RCLONE_REMOTE_NAME}" | sed -e 's~^[ \t]*~~;s~[ \t]*$~~')
-if [[ ! -z "${RCLONE_REMOTE_NAME}" ]]; then
-	echo "[info] RCLONE_REMOTE_NAME defined as '${RCLONE_REMOTE_NAME}'" | ts '%Y-%m-%d %H:%M:%.S'
-else
-	echo "[crit] RCLONE_REMOTE_NAME not defined (via -e RCLONE_REMOTE_NAME), exiting script..." | ts '%Y-%m-%d %H:%M:%.S'
-	exit 1
-fi
-
-export RCLONE_SLEEP_PERIOD=$(echo "${RCLONE_SLEEP_PERIOD}" | sed -e 's~^[ \t]*~~;s~[ \t]*$~~')
-if [[ ! -z "${RCLONE_SLEEP_PERIOD}" ]]; then
-	echo "[info] RCLONE_SLEEP_PERIOD defined as '${RCLONE_SLEEP_PERIOD}'" | ts '%Y-%m-%d %H:%M:%.S'
-else
-	echo "[info] RCLONE_SLEEP_PERIOD not defined (via -e RCLONE_SLEEP_PERIOD), defaulting to '24h'" | ts '%Y-%m-%d %H:%M:%.S'
-	export RCLONE_SLEEP_PERIOD="24h"
 fi
 
 export RCLONE_OPERATION=$(echo "${RCLONE_OPERATION,,}" | sed -e 's~^[ \t]*~~;s~[ \t]*$~~')
@@ -174,19 +164,6 @@ if [[ "${RCLONE_POST_CHECK}" == "yes" ]]; then
 	fi
 fi
 
-export RCLONE_USER_FLAGS=$(echo "${RCLONE_USER_FLAGS}" | sed -e 's~^[ \t]*~~;s~[ \t]*$~~')
-if [[ ! -z "${RCLONE_USER_FLAGS}" ]]; then
-	echo "[info] RCLONE_USER_FLAGS defined as '${RCLONE_USER_FLAGS}'" | ts '%Y-%m-%d %H:%M:%.S'
-fi
-
-export ENABLE_WEBUI=$(echo "${ENABLE_WEBUI}" | sed -e 's~^[ \t]*~~;s~[ \t]*$~~')
-if [[ ! -z "${ENABLE_WEBUI}" ]]; then
-	echo "[info] ENABLE_WEBUI defined as '${ENABLE_WEBUI}'" | ts '%Y-%m-%d %H:%M:%.S'
-else
-	echo "[warn] ENABLE_WEBUI not defined (via -e ENABLE_WEBUI), defaulting to 'yes'" | ts '%Y-%m-%d %H:%M:%.S'
-	export ENABLE_WEBUI="yes"
-fi
-
 if [[ "${ENABLE_WEBUI}" == "yes" ]]; then
 	export WEBUI_USER=$(echo "${WEBUI_USER}" | sed -e 's~^[ \t]*~~;s~[ \t]*$~~')
 	if [[ ! -z "${WEBUI_USER}" ]]; then
@@ -215,7 +192,6 @@ if [[ "${ENABLE_WEBUI}" == "yes" ]]; then
 		export WEBUI_PASS="$(cat ${WEBUI_PASS_file})"
 	fi
 fi
-
 EOF
 
 # replace env vars placeholder string with contents of file (here doc)

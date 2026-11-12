@@ -47,6 +47,8 @@ docker run -d \
     -e ENABLE_WEBUI=yes|no \
     -e WEBUI_USER=<rclone web ui username> \
     -e WEBUI_PASS=<rclone web ui password> \
+    -e ENABLE_STARTUP_SCRIPTS=<yes|no> \
+    -e STARTUP_SCRIPTS_MODE=<wait|parallel> \
     -e HEALTHCHECK_COMMAND=<command> \
     -e HEALTHCHECK_ACTION=<action> \
     -e HEALTHCHECK_HOSTNAME=<hostname> \
@@ -87,6 +89,8 @@ docker run -d \
     -e ENABLE_WEBUI=yes \
     -e WEBUI_USER=admin \
     -e WEBUI_PASS=rclone \
+    -e ENABLE_STARTUP_SCRIPTS=no \
+    -e STARTUP_SCRIPTS_MODE=wait \
     -e UMASK=000 \
     -e PUID=0 \
     -e PGID=0 \
@@ -94,6 +98,14 @@ docker run -d \
 ```
 
 ## Notes
+
+`ENABLE_STARTUP_SCRIPTS` when set to `yes` (default `no`) will allow a user to
+install additional packages from the official Arch Repository or the Arch User
+Repository (AUR) via scripts located in the folder `/config/rclone/scripts/`.
+
+`STARTUP_SCRIPTS_MODE` controls how those scripts are executed, set to `wait`
+(default) to run each script in turn and wait for it to complete before the next
+script runs, or `parallel` to run all scripts at the same time.
 
 If your cloud storage provider requires a 'bucket' defining (for instance
 Backblaze B2 does) then please specify this by appending ```:<bucket name>``` to
